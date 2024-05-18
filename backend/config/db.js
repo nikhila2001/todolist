@@ -3,9 +3,6 @@ import mongoose from "mongoose";
 import dotenv from 'dotenv'; // to access .env file
 dotenv.config();
 
-
-
-
 const db = process.env.MONGO_URI; // acess connection string from .env file
 // Method for connecting to the database
 const connectDB = async () => {
