@@ -1,10 +1,10 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import {Link} from "react-router-dom";
 
 
 
-function CreateTodo() {
+function CreateTodo({fetchTodoItems}) {
 
 const [addTodo, setAddTodo] = useState({title:"", status:""});
 const [error,setError] = useState(null);
@@ -14,9 +14,6 @@ const [error,setError] = useState(null);
 
     }
     
-    
-
-
      async  function handleSubmit(e) {
         e.preventDefault();
         const todo = {
@@ -26,7 +23,8 @@ const [error,setError] = useState(null);
         console.log("todo",todo);
         try {
             const result = await axios.post("http://localhost:8000/api/todos", addTodo);
-            setAddTodo({title:"", status:""})
+            setAddTodo({title:"", status:""});
+            fetchTodoItems();
             console.log(result.message);
         } catch(err) {
           setError("faile to add todo", err.message)

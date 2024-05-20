@@ -1,31 +1,16 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { Link } from "react-router-dom";
 
-function ShowTodo() {
-  const [todo, setTodo] = useState([]);
-  const [error,setError] = useState(null);
+function ShowTodo({todo,error}) {
 
-  let result;
-  useEffect(() => {
-    async function fetchTodoItems() {
-      try {
-        result = await axios.get("http://localhost:8000/api/todos")
-        console.log(result.data);
-        setTodo(result.data)
-      } catch(err) {
-        setError("Failed to Fetch todo items ", + err.message)
-        
-      }
-
-    }
-    fetchTodoItems()
-  }, [])
-  console.log("todo",todo);
+  console.log("Showtodo",todo);
   if(!error){
     return <>
     <section className="container">
      <section className="todos">
        <h1>What todo ?</h1>
+       <Link to="/create-todo" className="addTodoLink">
+        <button className="addTodoBtn">Add Todo</button>
+       </Link>
        <ul className="list-container">
          {todo.map((data) => (
            <li key={data._id}>
