@@ -1,5 +1,8 @@
-import mongoose from "mongoose";
+const mongoose = require('mongoose');
 
+// Controllers
+const { getAllTodos, postCreateTodo, putUpdateTodo, deleteTodo } = require('../controllers/todo.js');
+const { registerUser } = require('../controllers/userContoller.js');
 const TodoSchema = new mongoose.Schema({
     title: {
         type:"String",
@@ -8,8 +11,12 @@ const TodoSchema = new mongoose.Schema({
     status: {
         type: "String",
     },
+    date: {
+        type: Date,
+        default:Date.now,
+    }
 });
 
 const Todos = mongoose.model("todos", TodoSchema);
 
-export default Todos;                                                                                                                                                                                                                                                                       
+module.exports = TodoSchema;

@@ -1,8 +1,10 @@
-import express from 'express'; // importing express 
-import todoRoutes from './routes/todoRoutes.js'
-import cors from 'cors'; // allows cross orign api calls 
+const express = require('express'); // importing express 
+const todoRoutes = require('./routes/todoRoutes.js');
+const cors = require('cors'); // allows cross-origin API calls
+const userRoutes = require("./routes/userRoutes.js");
 
-import connectDB from './config/db.js';
+const connectDB = require('./config/db.js');
+
 
 const app = express();
 const port = 8000;
@@ -20,8 +22,9 @@ app.get('/', (req,res) => {
 })
 
 app.use("/api/todos",todoRoutes )
+app.use("/api/user",userRoutes)
 
 // listening to port at 8000
 app.listen(port, () => {
     console.log("App is running at port ", port);
-})
+});

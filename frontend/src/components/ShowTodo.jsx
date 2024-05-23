@@ -1,38 +1,56 @@
 import { Link } from "react-router-dom";
 
-function ShowTodo({todo,error}) {
+function ShowTodo({ todo, error }) {
+  console.log("Showtodo", todo);
 
-  console.log("Showtodo",todo);
-  if(!error){
-    return <>
-    <section className="container">
-     <section className="todos">
-       <h1>What todo ?</h1>
-       <Link to="/create-todo" className="addTodoLink">
-        <button className="addTodoBtn">Add Todo</button>
-       </Link>
-       <ul className="list-container">
-         {todo.map((data) => (
-           <li key={data._id}>
-           <div className="task">
-             <h3 className="task-title">{data.title}</h3>
-             <p className="task-status">{data.status}</p>
-           </div>
-   
-           <div className="action-btns">
-             <button className="edit-btn">Edit</button>
-             <button className="del-btn">Del</button>
-           </div>
-           </li>
-         ))}
-       </ul>
-     </section>
-    </section>
-     </>;
+  if (!error) {
+    return (
+      <>
+        <section className="todo-container p-md-4 d-flex">
+          <section className="todos w-100">
+            <div className="d-flex justify-content-between mb-4">
+            <h1 className="mb-0">What todo ?</h1>
+            <Link to="/create-todo" className="addTodoLink my-auto">
+              <button className="addTodoBtn">Add Todo</button>
+            </Link>
+            </div>
+          
+              {todo.map((data) => (
+                <ul className="ps-0">
+                  <li key={data._id} className="d-flex justify-content-between ">
+                  <div className="task d-flex ">
+                    <p className="task-title mb-0">{data.title} :</p>
+                    <p className="task-status mb-0 flex-grow-1">&nbsp;{data.status}</p>
+                    <small>{data.date}</small>
+                  </div>
+
+                  <div className="action-btns d-flex ">
+                    {console.log("id - ", data._id)}
+                    <button
+                      name={data._id}
+                      className="edit-btn me-3"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      name={data._id}
+                      className="del-btn"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </li>
+                <hr />
+                </ul>
+           
+              ))}
+          </section>
+        </section>
+      </>
+    );
   } else {
     return error;
   }
-  
 }
 
 export default ShowTodo;
