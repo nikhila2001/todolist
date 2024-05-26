@@ -7,7 +7,7 @@ const connectDB = require('./config/db.js');
 
 
 const app = express();
-const port = 8000;
+const port = 4000;
 
 // connect database
 connectDB();

@@ -5,22 +5,21 @@ console.log("JWT_SECRET in middleware", JWT_SECRET);
 
 const authenticateUser = (req,res,next) => {
     console.log("Middleware Called")
-    // get token from header
-    const token = req.header('Authorization');
-    console.log("Token: ", token)
+   try {
+    // 'Authorization' header with 'Bearer token' format
+    const token =  req.headers.authorization.split(' ')[1];
 
-    // check if token exists
-    if(!token) return res.status(401).json({message:"Access denied. Token is required"});
-    
-    jwt.verify(token, JWT_SECRET, (err, user) => {
-        if (err){
-            console.error("Error: ", err)
-            return res.status(403).json({ message: 'Invalid token' });
-
-        } 
-        req.user = user;
-        next();
-        });
+    // verify and decode the JWT token
+    const decoded = jwt.verify(token, JWT_SECRET);
+    // Attach the decoded user data to the request object
+    req.user = decoded; 
+    console.log(decoded);
+    // If valid, proceed to the route handler
+    next();
+   } catch (error) {
+    // Unauthorized if token is invalid or missing
+    res.status(401).json({ message: 'Unauthorized' }); 
+   }
 }
 
 module.exports = authenticateUser;
