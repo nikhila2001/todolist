@@ -4,8 +4,8 @@ const Todos = require('../models/todoList.js');
 // GET All Todos
  const getAllTodos = async (req,res) => {
     try {
-        const todos = await Todos.find();
-        res.json(todos);
+        const todos = await Todos.find({});
+         return  res.json(todos);
     } catch (err) {
         res.status(404).json({message:err.message})
     } 

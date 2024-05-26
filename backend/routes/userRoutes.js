@@ -1,7 +1,7 @@
 const express = require('express');
-
 const router = express.Router();
-const { registerUser, loginUser} = require('../controllers/userContoller.js');
+const { registerUser, loginUser, getUserDetails} = require('../controllers/userContoller.js');
+const authenticateUser = require('../middleware/authMiddleware');
 
 // create user route
 router.post('/register', registerUser);
@@ -9,4 +9,6 @@ router.post('/register', registerUser);
 // authenticate user route
 router.post('/login', loginUser);
 
+// protcted route requires authentication
+router.get('/getUser', authenticateUser, getUserDetails )
 module.exports = router;
