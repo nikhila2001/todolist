@@ -3,10 +3,10 @@ var bcrypt = require("bcryptjs");
 var jwt = require("jsonwebtoken");
 const { check, validationResult } = require("express-validator");
 const JWT_SECRET = "my@secret";
-const authMiddleware = require('../middleware/authMiddleware');
+const authMiddleware = require("../middleware/authMiddleware");
 console.log("JWT_SECRET in controller", JWT_SECRET);
 
-// 1. controller methods for register 
+// 1. controller methods for register
 
 const registerUser = async (req, res) => {
   try {
@@ -31,7 +31,7 @@ const registerUser = async (req, res) => {
 
     // check if user with provided email exists
     const existingUser = await User.findOne({ email: req.body.email });
-    console.log( "EXTIST",existingUser);
+    console.log("EXTIST", existingUser);
     if (existingUser) {
       return res
         .status(404)
@@ -41,7 +41,7 @@ const registerUser = async (req, res) => {
     // creating hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
-     // register new user if user inputs are validated
+    // register new user if user inputs are validated
     const newUser = new User({
       username: req.body.username,
       email: req.body.email,
@@ -50,44 +50,49 @@ const registerUser = async (req, res) => {
     await newUser.save();
     console.log("Saved user", newUser);
     // generate JWT
-    const token = jwt.sign({ _id: newUser._id },JWT_SECRET, { expiresIn: '7d' }); // Expires in 1 hour
+    const token = jwt.sign({ _id: newUser._id }, JWT_SECRET, {
+      expiresIn: "7d",
+    }); // Expires in 1 hour
     console.log("registerd user token", token);
-    res.status(201).json({message:'User created successfully', token, newUser})
-  } catch(err) {
+    res
+      .status(201)
+      .json({ message: "User created successfully", token, newUser });
+  } catch (err) {
     console.log(err);
     return res.status(400).send("Error. Try again.");
   }
 };
 
-const loginUser = async (req,res) => {
-try {
-  const {email, password} = req.body;
-  // check existing  user in the database
-  const user = await User.findOne({email});
-  console.log("existing user ", user);
-  if(!user){
-  return res.status(400).json({message:"No user found "});
-  }
-  // comapare user entered pw with password stored in database
-  const matchPassword = await bcrypt.compare(password, user.password);
-  if(!matchPassword) return res.status(400).send("Wrong password");
+const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    // check existing  user in the database
+    const user = await User.findOne({ email });
+    console.log("existing user ", user);
+    if (!user) {
+      return res.status(400).json({ message: "No user found " });
+    }
+    // comapare user entered pw with password stored in database
+    const matchPassword = await bcrypt.compare(password, user.password);
+    if (!matchPassword) return res.status(400).send("Wrong password");
 
-  // generate JWT on successful login 
-  const token = jwt.sign({_id: user._id}, JWT_SECRET, {expiresIn:"7d",});
-  console.log("logged in user token", token);
-  res.status(200).json({ message: 'Login successful', token });
-} catch (error) {
-  res.status(500).json({ message: 'Error logging in' });
-}
+    // generate JWT on successful login
+    const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: "7d" });
+    console.log("logged in user token", token);
+    res.status(200).json({ message: "Login successful", token });
+  } catch (error) {
+    res.status(500).json({ message: "Error logging in" });
+  }
 };
 
-const getLoggedInUserDetails = (req,res) => {
+const getLoggedInUserDetails = async (req, res) => {
   try {
-  // Access user data from the request object after authentication
-  console.log(req.user);
-  res.status(200).json({user: req.user});
+    // Access user data from the request object after authentication
+    console.log(req.user);
+    const user = await User.findById(req.user._id);
+    res.status(200).json({ user: user });
   } catch (error) {
-    res.status(500).json({message:"Error retrieving use details"})
+    res.status(500).json({ message: "Error retrieving use details" });
   }
 };
 module.exports = { registerUser, loginUser, getLoggedInUserDetails };

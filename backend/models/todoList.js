@@ -1,22 +1,23 @@
-const mongoose = require('mongoose');
-
-// Controllers
-const { getAllTodos, postCreateTodo, putUpdateTodo, deleteTodo } = require('../controllers/todo.js');
-const { registerUser } = require('../controllers/userContoller.js');
+const mongoose = require("mongoose");
 const TodoSchema = new mongoose.Schema({
-    title: {
-        type:"String",
-        required:true,
-    },
-    status: {
-        type: "String",
-    },
-    date: {
-        type: Date,
-        default:Date.now,
-    }
+  title: {
+    type: "String",
+    required: true,
+  },
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: "user",
+  },
+
+  status: {
+    type: "String",
+  },
+  date: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const Todos = mongoose.model("todos", TodoSchema);
 
-module.exports = TodoSchema;
+module.exports = Todos;
