@@ -19,6 +19,8 @@ function NavLinks () {
        <Link className="nav-link active" aria-current="page" to="/">Home</Link>
        <Link className="nav-link" to="/profile">Profile</Link>
        <Link className="nav-link" to="/login">Login</Link>
+       <Link className="nav-link" to="/Register">Register</Link>
+
       </div>
     </div>
   </div>

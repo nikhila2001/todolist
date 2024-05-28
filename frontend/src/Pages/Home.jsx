@@ -18,7 +18,7 @@ function Home () {
     const [status, setStatus] = useState("");
     const [deadline, setDeadline] = useState("");
     const [loading, setLoading] = useState(false);
-    const [userTasks, setUserTasks] = useState([]);
+      const [userTasks, setUserTasks] = useState([]);
     const [refresh, setRefresh] = useState(false);
     const {  isAuth } = useContext(AppContext);
 
@@ -26,11 +26,11 @@ function Home () {
     // get all tasks of a user
     const getAllTask = async () => {
         try {
-          let  data  = await axios.get(`${host}/todos`, config)
-          setUserTasks(data);
+          let  response  = await axios.get(`${host}/todos`, config)
+          setUserTasks(response.data);
         } catch (error) {
           console.log("error:", error);
-          toast.error(error.response.data.message);
+          toast.error(error.message);
         }
       };
    
@@ -65,7 +65,7 @@ function Home () {
         setLoading(true);
         try {
           const data = await axios.post(
-            `${host}todos/create`,
+            `${host}/todos/create`,
             {
               title,
               status,
@@ -78,6 +78,7 @@ function Home () {
           setTitle("");
           setStatus("");
           setDeadline("");
+          getAllTask(); // fetch updated task after adding todo
           setRefresh((prev) => !prev);
         } catch (error) {
           console.log("error:", error);
@@ -92,55 +93,64 @@ function Home () {
       if (!isAuth) return <Navigate to="/login" />;
 
     return (
+      <>
 <div>
     {/* Form to add the todo */}
 <form onSubmit={handleForm}>
+
+  <div>
+  <label htmlFor="titleInput" className="form-label">Title</label>
         <input
           type="text"
-          placeholder="Title"
+          placeholder="enter your todo"
+          id="titleInput"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-        />
-        <input
+          required
+        />   
+  </div>
+
+<div>
+<label htmlFor="statusInput" className="form-label">Status</label>
+<input
           type="text"
           placeholder="status"
+          id="statusInput"
           value={status}
           onChange={(e) => setStatus(e.target.value)}
         />
-         <input
+</div>
+
+<div>
+<label htmlFor="deadlineInput" className="form-label">Deadline</label>
+<input
           type="date"
           placeholder="deadline"
           value={deadline}
+          id="deadlineInput"
+          required
           onChange={(e) => setDeadline(e.target.value)}
         />
-        <button type="submit">ADD TASK</button>
-      </form>
-      {/* Table view of todos */}
-      <table class="table">
-  <thead>
-    <tr>
-      <th scope="col">title</th>
-      <th scope="col">status</th>
-      <th scope="col">deadline</th>
-      <th scope="col">delete</th>
-    </tr>
-    {userTasks?.map((task) => {
-              return (
-                <TodoLists
-                  key={task._id}
-                  title={task.title}
-                  status={task.status}
-                  deadline={task.deadline}
-                  updateTodo={updateTodo}
-                  deleteTodo={deleteTodo}
-                  id={task._id}
-                />
-              );
-            })}
-  </thead>
- 
-</table>
 </div>
+
+        <button type="submit">ADD TASK</button>
+      </form> 
+</div>
+  {/* Table view of todos */}
+  <table className="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Title</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Deadline</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <TodoLists todos={userTasks} deadline={deadline} updateTodo={updateTodo} deleteTodo={deleteTodo} />
+                </tbody>
+            </table>
+</>
     )
 }
 export default Home;

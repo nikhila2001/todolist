@@ -45,7 +45,7 @@ const handleForm = async (e) => {
         setIsLoading(false);
     };
 }
-if (isAuth) return <Navigate to="/" />;
+// if (isAuth) return <Navigate to="/" />;
 
   return(
 <form>

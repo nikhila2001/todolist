@@ -16,7 +16,8 @@ const config = {
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { setIsAuth, isAuth, setIsLoading, loading, setUserName } =
+  const [isloggedIn, setIsLoggedIn] = useState(false);
+   const { setIsAuth, isAuth, setIsLoading, loading, setUserName } =
     useContext(AppContext);
 
   // url and headers
@@ -40,14 +41,17 @@ function Login() {
       setEmail("");
       setPassword("");
       setIsLoading(false);
+      setIsLoggedIn(true);
     } catch (error) {
       toast.error("something went wrong");
       setIsLoading(false);
       setIsAuth(false);
     }
   };
-  // if use ris authenticated the send them to the Home page
-  if (isAuth) return <Navigate to="/" />;
+  // if user is authenticated the send them to the Home page
+  // if (isAuth) return <Navigate to="/" />;
+  {isloggedIn && <Navigate to="/" />}
+
 return (
     <>
         <form>
@@ -65,7 +69,7 @@ return (
     <input type="checkbox" className="form-check-input" id="exampleCheck1"/>
     <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
   </div>
-  <button type="submit" className="btn btn-primary"  isDisabled={loading ? true : false} onClick={handleForm}>Sign in</button>
+  <button type="submit" className="btn btn-primary"  isdisabled={loading ? true : false} onClick={handleForm}>Sign in</button>
   <p>New here? 
     <ReactRouterLink to="/register">
     Register

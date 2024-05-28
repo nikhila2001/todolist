@@ -19,7 +19,7 @@ const getAllTodos = async (req, res) => {
 // POST new todo
 const postCreateTodo = async (req, res) => {
   try {
-    const { title, status, date } = req.body;
+    const { title, status, deadline } = req.body;
     // creating todo
     const todo = new Todos({
       title,
