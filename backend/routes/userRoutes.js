@@ -4,14 +4,18 @@ const {
   registerUser,
   loginUser,
   getLoggedInUserDetails,
+  logoutUser
 } = require("../controllers/userContoller.js");
 const authenticateUser = require("../middleware/authMiddleware");
 
 // create user route
 router.post("/register", registerUser);
 
-// authenticate user route
+// login user route
 router.post("/login", loginUser);
+
+// Logout user route
+router.post("/logout", logoutUser);
 
 // protcted route requires authentication
 router.get("/me", authenticateUser, getLoggedInUserDetails);

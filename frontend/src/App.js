@@ -1,41 +1,51 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState, useEffect } from "react";
-import axios from "axios";
+import { AppContext } from "./components/AppContextProvider.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Home from "./components/Home";
-import CreateTodo from "./components/CreateTodo";
-import Login from "./components/Login";
-import Register from "./components/Register";
 import './App.css';
-import todoState from "./context/todos/TodoState";
-import Navbar from "./components/Navbar";
+import NavLinks from "./components/NavLinks";
+import { Toaster, toast } from "react-hot-toast";
+import AllRoutes from "./components/AllRoutes";
+import { useContext, useEffect } from "react";
+import axios from "axios";
+import { BrowserRouter } from "react-router-dom";
 
+// headers
+const host = "http://localhost:4000/api";
+const config = {
+  headers:{
+    "Content-Type":"application/json",
+    "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjUzNGIyMjMxMzhiYTE1MzA1OTY1MTkiLCJpYXQiOjE3MTY3ODY4MjUsImV4cCI6MTcxNzM5MTYyNX0.ZYem6DQHgvTBidXBCG9H60Eye6i0fyIwyWjin0Tr_f4"
+  }
+}
 function App() {
-  
+  const {  setUser, setIsAuth, setIsLoading } = useContext(AppContext);
+
+  useEffect(() => {
+    setIsLoading(true);
+    axios
+      .get(`${host}/user/me`, config)
+      .then((res) => {
+        console.log("res from me endpoint:", res);
+        setUser(res.data.user);
+        setIsAuth(true);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.log("error:", error);
+        setUser({});
+        toast.error("Login first");
+        setIsAuth(false);
+        setIsLoading(false);
+      });
+  }, []);
+
   return (
     <>
-      <div className="App">
-        <todoState >
-        <BrowserRouter>
-        <Navbar />
-         <Routes>
-
-          <Route
-            exact
-            path="/"
-            element={<Home />}
-          ></Route>
-          <Route
-            path="/create-todo"
-            element={<CreateTodo  />}
-          ></Route>
-        </Routes> 
+      <BrowserRouter>
+      <NavLinks/>
+      <AllRoutes />
+      <Toaster />
       </BrowserRouter>
-        </todoState>
-      
-        {/* <Login />
-       <Register /> */}
-      </div>
+     
     </>
   );
 }

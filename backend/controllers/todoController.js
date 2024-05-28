@@ -38,13 +38,14 @@ const postCreateTodo = async (req, res) => {
 // edit an existing todo  todo
 const putUpdateTodo = async (req, res) => {
   try {
-    const { title, status } = req.body;
+    const { title, status, deadline } = req.body;
     console.log("req body in updateTodo", req.body);
     // create a new todo obj
     const newTodo = {};
     if (title) {
       newTodo.title = title;
       newTodo.status = status;
+      newTodo.deadline = deadline;
     }
     // find the todo to be updated
     let todos = await Todos.findById(req.body.id);

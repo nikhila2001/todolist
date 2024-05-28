@@ -12,9 +12,8 @@ const TodoSchema = new mongoose.Schema({
   status: {
     type: "String",
   },
-  date: {
+  deadline: {
     type: Date,
-    default: Date.now,
   },
 });
 
