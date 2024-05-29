@@ -1,22 +1,20 @@
 // TodoLists.jsx
 import React from "react";
 
-function TodoLists({ todos, updateTodo, deleteTodo , deadline}) {
-   // Convert deadline to a Date object
-   const deadlineDate = new Date(deadline);
-   // Check if deadlineDate is valid
-   const formattedDeadline = deadlineDate instanceof Date && !isNaN(deadlineDate) ? deadlineDate.toLocaleDateString() : "Invalid Date";
+function TodoLists({ todos, deadline ,deleteTodo}) {
+  const formattedDeadline = new Date(deadline).toLocaleDateString() || "Invalid Date";
+
   return (
     <>
-      {todos.map((task) => (
-        <tr key={task._id}>
-          <td>{task.title}</td>
-          <td>{task.status}</td>
+      {todos.map((todo) => (
+        <tr key={todo._id}>
+          <td>{todo.title}</td>
+          <td>{todo.status}</td>
           <td>{formattedDeadline}</td>
           <td>
-            <button className="btn btn-sm btn-primary me-2" onClick={() => updateTodo(task._id)}>Edit</button>
-            <button className="btn btn-sm btn-danger" onClick={() => deleteTodo(task._id)}>Delete</button>
+            <button className="border-0 px-2 btn btn-danger text-light " onClick={(() => deleteTodo(todo._id))}>Delete</button>
           </td>
+        
         </tr>
       ))}
     </>

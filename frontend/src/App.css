@@ -3,20 +3,22 @@ box-sizing: border-box;
 padding: 0%;
 margin: 0%;
 }
-
-/* body {
+ 
+  body {
     background-color: rgb(22, 20, 20);
     color: rgb(207, 205, 205);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
+    /* color: rgb(207, 205, 205);
     height: 100vh;
     width: 100vw;
-} */
+    display: flex;
+    justify-content: center;
+    align-items: center; */
+}  
 
-.form-container, .todo-container {
+ .form-container{
  background-color: rgb(40, 40, 40);
- max-width: 30rem;
+ color: rgb(207, 205, 205);
 
-}
+} 
 

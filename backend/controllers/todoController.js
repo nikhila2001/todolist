@@ -24,7 +24,7 @@ const postCreateTodo = async (req, res) => {
     const todo = new Todos({
       title,
       status,
-      date,
+      deadline,
       user: req.user._id,
     });
     // save todo
@@ -35,10 +35,10 @@ const postCreateTodo = async (req, res) => {
   }
 };
 
-// edit an existing todo  todo
+// update an existing todo  todo
 const putUpdateTodo = async (req, res) => {
   try {
-    const { title, status, deadline } = req.body;
+    const {id, title, status, deadline } = req.body;
     console.log("req body in updateTodo", req.body);
     // create a new todo obj
     const newTodo = {};
@@ -53,10 +53,11 @@ const putUpdateTodo = async (req, res) => {
       return res.status(404).send("Not found");
     }
     if (todos.user.toString() !== req.user._id) {
-      return res.status(401).send(401).send("Not allowed to edit");
+      console.log("user id - ", req.user._id);
+      return res.status(401).send("Not allowed to edit");
     }
     todos = await Todos.findByIdAndUpdate(
-      req.body.id,
+      id,
       { $set: newTodo },
       { new: true }
     );
@@ -70,18 +71,21 @@ const putUpdateTodo = async (req, res) => {
 const deleteTodo = async (req, res) => {
   try {
     // find the todo to be deleted
-    let todos = await Todos.findById(req.body.id);
-    if (!todos) {
+    let todo = await Todos.findById(req.body.id);
+    console.log("todo id", req.body.id);
+    if (!todo) {
       return res.status(404).send("Not found");
     }
-    if (todos.user.toString() !== req.user._id) {
+    if (todo.user.toString() !== req.user._id) {
       return res.status(401).send(401).send("Not allowed to delete");
     }
-    todos = await Todos.findByIdAndDelete(req.body.id);
-    res.json({ message: "todo deleted successfully", todos });
+    const deletedTodo = await Todos.findByIdAndDelete(req.body.id);
+    res.json({ message: "todo deleted successfully", deletedTodo });
   } catch (err) {
-    res.status(404).json({ message: "book not found", error: err.message });
+    res.status(404).json({ message: "Failed to delete todo", error: err.message });
   }
 };
+
+
 
 module.exports = { getAllTodos, postCreateTodo, putUpdateTodo, deleteTodo };

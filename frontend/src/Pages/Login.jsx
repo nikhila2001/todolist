@@ -16,12 +16,10 @@ const config = {
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isloggedIn, setIsLoggedIn] = useState(false);
-   const { setIsAuth, isAuth, setIsLoading, loading, setUserName } =
+  const { setIsAuth, isAuth, setIsLoading, loading, setUserName } =
     useContext(AppContext);
 
   // url and headers
- 
 
   // handle login form
   const handleForm = async (e) => {
@@ -41,7 +39,6 @@ function Login() {
       setEmail("");
       setPassword("");
       setIsLoading(false);
-      setIsLoggedIn(true);
     } catch (error) {
       toast.error("something went wrong");
       setIsLoading(false);
@@ -49,34 +46,71 @@ function Login() {
     }
   };
   // if user is authenticated the send them to the Home page
-  // if (isAuth) return <Navigate to="/" />;
-  {isloggedIn && <Navigate to="/" />}
+  if (isAuth) return <Navigate to="/" />;
+  // {isloggedIn && <Navigate to="/" />}
 
-return (
+  return (
     <>
-        <form>
-            <h1>Sign in to your account</h1>
-  <div className="mb-3">
-    <label htmlFor="exampleInputEmail1" className="form-label" >Email address</label>
-    <input type="email" className="form-control" value={email} aria-describedby="emailHelp" required onChange={(e) => setEmail(e.target.value)}/>
-    <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
-  </div>
-  <div className="mb-3">
-    <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
-    <input type="password" value={password} className="form-control" id="exampleInputPassword1" onChange={(e) =>setPassword(e.target.value)} />
-  </div>
-  <div className="mb-3 form-check">
-    <input type="checkbox" className="form-check-input" id="exampleCheck1"/>
-    <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
-  </div>
-  <button type="submit" className="btn btn-primary"  isdisabled={loading ? true : false} onClick={handleForm}>Sign in</button>
-  <p>New here? 
-    <ReactRouterLink to="/register">
-    Register
-    </ReactRouterLink></p>
-</form>                                          
+      <form className="form-container p-md-4 " style={{maxWidth:"30rem"}} >
+        <h1>Login</h1>
+        {/* Email Field */}
+        <div className="email-field">
+          <label htmlFor="exampleInputEmail1" className="form-label">
+            Email address
+          </label>
+          <input
+            type="email"
+            className="form-control"
+            value={email}
+            aria-describedby="emailHelp"
+            required
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <div id="emailHelp" className="form-text text-light">
+            We'll never share your email with anyone else.
+          </div>
+        </div>
+                {/* Password Field */}
+        <div className="mb-3">
+          <label htmlFor="exampleInputPassword1" className="form-label">
+            Password
+          </label>
+          <input
+            type="password"
+            value={password}
+            className="form-control"
+            id="exampleInputPassword1"
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
+           {/* Status Field */}
+        <div className="mb-3 form-check">
+          <input
+            type="checkbox"
+            className="form-check-input"
+            id="exampleCheck1"
+          />
+          <label className="form-check-label" htmlFor="exampleCheck1">
+            Check me out
+          </label>
+        </div>
+          {/* Login Field */}
+        <button
+          type="submit"
+          className="btn btn-primary w-100 mb-3"
+          isdisabled={loading ? true : false}
+          onClick={handleForm}
+        >
+          Sign in
+        </button>
+        <p className="text-center mb-0">
+          New here?
+          &nbsp;
+          <ReactRouterLink to="/register">Register</ReactRouterLink>
+        </p>
+      </form>
     </>
-)
+  );
 }
 
 export default Login;

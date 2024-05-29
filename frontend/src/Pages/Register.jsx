@@ -14,7 +14,7 @@ const config = {
 };
 
 function Register() {
-  const [name, setName] = useState("");
+  const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { setIsAuth, isAuth, loading, setIsLoading } = useContext(AppContext);
@@ -26,7 +26,7 @@ const handleForm = async (e) => {
         const  data = await axios.post(
             `${host}/user/register`,
             {
-              name,
+              username,
               email,
               password,
             },
@@ -34,7 +34,7 @@ const handleForm = async (e) => {
           );
           setIsAuth(true);
           toast.success(data.message);
-          setName("");
+          setUserName("");
           setEmail("");
           setPassword("");
           setIsLoading(false);
@@ -45,20 +45,24 @@ const handleForm = async (e) => {
         setIsLoading(false);
     };
 }
-// if (isAuth) return <Navigate to="/" />;
+if (isAuth) return <Navigate to="/" />;
 
   return(
 <form>
   <div className="mb-3">
 
-  <div className="mb-3 form-check">
-    <input type="text" className="form-check-input" id="exampleCheck1" value={name} onChange={(e) => setName(e.target.value)}/>
-    <label className="form-check-label" htmlFor="exampleCheck1">First Name</label>
+  <div className="mb-3 form-check first-name-field">
+  <label className="form-check-label" htmlFor="exampleCheck1">User Name</label>
+    <input type="text" className="" id="exampleCheck1" value={username} onChange={(e) => setUserName(e.target.value)}/>
+    </div>
 
+    <div className="email-field">
     <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
     <input type="email" value={email} className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" onChange={(e) => setEmail(e.target.value)}/>
     <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
-  </div>
+    </div>
+    
+ 
 
   <div className="mb-3">
     <label htmlFor="exampleInputPassword1" className="form-label">Password</label>

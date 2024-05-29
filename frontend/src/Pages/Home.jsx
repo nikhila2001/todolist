@@ -7,150 +7,169 @@ import { Navigate } from "react-router-dom";
 
 const host = "http://localhost:4000/api";
 const config = {
-  headers:{
-    "Content-Type":"application/json",
-    "token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjUzNGIyMjMxMzhiYTE1MzA1OTY1MTkiLCJpYXQiOjE3MTY3ODY4MjUsImV4cCI6MTcxNzM5MTYyNX0.ZYem6DQHgvTBidXBCG9H60Eye6i0fyIwyWjin0Tr_f4"
-  }
-}
+  headers: {
+    "Content-Type": "application/json",
+    token:
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjUzNGIyMjMxMzhiYTE1MzA1OTY1MTkiLCJpYXQiOjE3MTY3ODY4MjUsImV4cCI6MTcxNzM5MTYyNX0.ZYem6DQHgvTBidXBCG9H60Eye6i0fyIwyWjin0Tr_f4",
+  },
+};
 
-function Home () {
-    const [title, setTitle] = useState("");
-    const [status, setStatus] = useState("");
-    const [deadline, setDeadline] = useState("");
-    const [loading, setLoading] = useState(false);
-      const [userTasks, setUserTasks] = useState([]);
-    const [refresh, setRefresh] = useState(false);
-    const {  isAuth } = useContext(AppContext);
+function Home() {
+  const [title, setTitle] = useState("");
+  const [status, setStatus] = useState("");
+  const [deadline, setDeadline] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [userTasks, setUserTasks] = useState([]);
+  const [refresh, setRefresh] = useState(false);
+  const { isAuth } = useContext(AppContext);
 
+  // get all tasks of a user
+  const getAllTask = async () => {
+    try {
+      let response = await axios.get(`${host}/todos`, config);
+      setUserTasks(response.data);
+    } catch (error) {
+      console.log("error:", error);
+      toast.error(error.message);
+    }
+  };
 
-    // get all tasks of a user
-    const getAllTask = async () => {
-        try {
-          let  response  = await axios.get(`${host}/todos`, config)
-          setUserTasks(response.data);
-        } catch (error) {
-          console.log("error:", error);
-          toast.error(error.message);
-        }
-      };
-   
-    // update ord edit todo
-    const updateTodo = async (id) => {
-        try {
-          const data  = await axios.post(`${host}/todos/updateTodo`, {id,title, status, deadline}, config);
-          toast.success(data.message);
-          setRefresh((prev) => !prev);
-        } catch (error) {
-          console.log("error:", error);
-          toast.error(error.response.data.message);
-        }
-      };
+  // handle form data
+  const handleForm = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const data = await axios.post(
+        `${host}/todos/create`,
+        {
+          title,
+          status,
+          deadline,
+        },
+        config
+      );
+      setLoading(false);
+      toast.success(data.message);
+      setTitle("");
+      setStatus("");
+      setDeadline("");
+      getAllTask(); // fetch updated task after adding todo
+      setRefresh((prev) => !prev);
+    } catch (error) {
+      console.log("error:", error);
+      toast.error(error.response.data.message);
+    }
+  };
 
+  useEffect(() => {
+    getAllTask();
+  }, [refresh]);
 
-    // delete todo
-    const deleteTodo = async (id) => {
-        try {
-          const  data  = await axios.post(`${host}/todos/deleteTodo`, config)
-          
-          toast.success(data.message);
-          setRefresh((prev) => !prev);
-        } catch (error) {
-          console.log("error:", error);
-          toast.error(error.response.data.message);
-        }
-      };
-    // handle form data
-    const handleForm = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        try {
-          const data = await axios.post(
-            `${host}/todos/create`,
-            {
-              title,
-              status,
-              deadline
-            },
-            config
-          );
-          setLoading(false);
-          toast.success(data.message);
-          setTitle("");
-          setStatus("");
-          setDeadline("");
-          getAllTask(); // fetch updated task after adding todo
-          setRefresh((prev) => !prev);
-        } catch (error) {
-          console.log("error:", error);
-          toast.error(error.response.data.message);
-        }
-      };
+  // handle delete task
+  const deleteTodo = async (id) => {
+    try {
+      const response = await axios.post(
+        `${host}/todos/deleteTodo`,
+        { id },
+        config
+      );
+      if (response.status !== 200) {
+        console.log(response.status);
+        throw new Error("Faild to delete a task");
+      }
+      getAllTask();
+    } catch (error) {
+      console.error("Error deleting task :", error.message);
+    }
+  };
 
-      useEffect(() => {
-        getAllTask();
-      }, [refresh]);
+  if (!isAuth) return <Navigate to="/login" />;
 
-      if (!isAuth) return <Navigate to="/login" />;
+  return (
+    <>
+      {/* Form to add the todo */}
 
-    return (
-      <>
-<div>
-    {/* Form to add the todo */}
-<form onSubmit={handleForm}>
+      <div className="d-flex justify-content-between p-md-3">
+        <form
+          onSubmit={handleForm}
+          className="todo-container p-md-3 flex-grow-1"
+          style={{ minWidth: "30rem" }}
+        >
+          <div className="mb-3 row">
+            <label htmlFor="title" className="col-sm-2 col-form-label">
+              Title
+            </label>
+            <div className="col-sm-10">
+              <input
+                type="text"
+                placeholder="enter your todo"
+                className="form-control"
+                id="title"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                required
+              />
+            </div>
+          </div>
 
-  <div>
-  <label htmlFor="titleInput" className="form-label">Title</label>
-        <input
-          type="text"
-          placeholder="enter your todo"
-          id="titleInput"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />   
-  </div>
+          <div className="mb-3 row">
+            <label htmlFor="inputStatus" className="col-sm-2 col-form-label">
+              Status
+            </label>
+            <div className="col-sm-10">
+              <input
+                type="text"
+                placeholder="status"
+                className="form-control"
+                id="inputStatus"
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}
+                required
+              />
+            </div>
+          </div>
 
-<div>
-<label htmlFor="statusInput" className="form-label">Status</label>
-<input
-          type="text"
-          placeholder="status"
-          id="statusInput"
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-        />
-</div>
+          <div className="mb-3 row">
+            <label htmlFor="inputDeadline" className="col-sm-2 col-form-label">
+              Deadline
+            </label>
+            <div className="col-sm-10">
+              <input
+                type="date"
+                placeholder="enter date"
+                className="form-control"
+                id="inputDeadline"
+                value={deadline}
+                onChange={(e) => setDeadline(e.target.value)}
+                required
+              />
+            </div>
+          </div>
+          <button type="submit" className="w-100 btn btn-info">
+            ADD TASK
+          </button>
+        </form>
 
-<div>
-<label htmlFor="deadlineInput" className="form-label">Deadline</label>
-<input
-          type="date"
-          placeholder="deadline"
-          value={deadline}
-          id="deadlineInput"
-          required
-          onChange={(e) => setDeadline(e.target.value)}
-        />
-</div>
-
-        <button type="submit">ADD TASK</button>
-      </form> 
-</div>
-  {/* Table view of todos */}
-  <table className="table">
-                <thead>
-                    <tr>
-                        <th scope="col">Title</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Deadline</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <TodoLists todos={userTasks} deadline={deadline} updateTodo={updateTodo} deleteTodo={deleteTodo} />
-                </tbody>
-            </table>
-</>
-    )
+        {/* Table view of todos */}
+        <table className="table table-success table-hover  border-0 align-middle table-responsive-sm">
+          <thead>
+            <tr>
+              <th scope="col">Title</th>
+              <th scope="col">Status</th>
+              <th scope="col">Deadline</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody className="">
+            <TodoLists
+              todos={userTasks}
+              deadline={deadline}
+              deleteTodo={deleteTodo}
+            />
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
 }
 export default Home;

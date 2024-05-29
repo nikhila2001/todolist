@@ -41,6 +41,7 @@ const registerUser = async (req, res) => {
     // creating hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
+    
     // register new user if user inputs are validated
     const newUser = new User({
       username: req.body.username,
