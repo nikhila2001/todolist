@@ -14,8 +14,6 @@ router.post("/register", registerUser);
 // login user route
 router.post("/login", loginUser);
 
-// Logout user route
-router.post("/logout", logoutUser);
 
 // protcted route requires authentication
 router.get("/me", authenticateUser, getLoggedInUserDetails);

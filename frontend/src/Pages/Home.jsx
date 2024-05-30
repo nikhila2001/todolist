@@ -6,13 +6,12 @@ import TodoLists from "../components/TodoLists";
 import { Navigate } from "react-router-dom";
 
 const host = "http://localhost:4000/api";
-const config = {
-  headers: {
+
+ const headers = {
     "Content-Type": "application/json",
-    token:
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjUzNGIyMjMxMzhiYTE1MzA1OTY1MTkiLCJpYXQiOjE3MTY3ODY4MjUsImV4cCI6MTcxNzM5MTYyNX0.ZYem6DQHgvTBidXBCG9H60Eye6i0fyIwyWjin0Tr_f4",
-  },
-};
+    token: localStorage.getItem("token")
+  }
+
 
 function Home() {
   const [title, setTitle] = useState("");
@@ -26,11 +25,12 @@ function Home() {
   // get all tasks of a user
   const getAllTask = async () => {
     try {
-      let response = await axios.get(`${host}/todos`, config);
+      let response = await axios.get(`${host}/todos`, {headers});
       setUserTasks(response.data);
     } catch (error) {
       console.log("error:", error);
       toast.error(error.message);
+      
     }
   };
 
@@ -46,7 +46,7 @@ function Home() {
           status,
           deadline,
         },
-        config
+        {headers}
       );
       setLoading(false);
       toast.success(data.message);
@@ -71,7 +71,7 @@ function Home() {
       const response = await axios.post(
         `${host}/todos/deleteTodo`,
         { id },
-        config
+        {headers}
       );
       if (response.status !== 200) {
         console.log(response.status);

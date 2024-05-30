@@ -19,7 +19,7 @@ function Register() {
   const [password, setPassword] = useState("");
   const { setIsAuth, isAuth, loading, setIsLoading } = useContext(AppContext);
 
-const handleForm = async (e) => {
+const handleRegister = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     try {
@@ -45,18 +45,21 @@ const handleForm = async (e) => {
         setIsLoading(false);
     };
 }
-if (isAuth) return <Navigate to="/" />;
+// if (isAuth && localStorage.getItem("token")) return <Navigate to="/" />;
+
 
   return(
-<form>
-  <div className="mb-3">
+    <>
+    <div className="d-flex justify-content-center align-items-center vw-100 vh-100" >
+    <form className="form-container px-md-4 pt-md-4" style={{minWidth:"30rem"}}  >
+    <h1>Register</h1>
 
-  <div className="mb-3 form-check first-name-field">
-  <label className="form-check-label" htmlFor="exampleCheck1">User Name</label>
-    <input type="text" className="" id="exampleCheck1" value={username} onChange={(e) => setUserName(e.target.value)}/>
+  <div className="mb-3  first-name-field">
+  <label className="form-label" htmlFor="exampleCheck1">User Name</label>
+    <input type="text" className="form-control" id="exampleCheck1" placeholder="Enter your name" value={username} onChange={(e) => setUserName(e.target.value)}/>
     </div>
 
-    <div className="email-field">
+    <div className=" email-field">
     <label htmlFor="exampleInputEmail1" className="form-label">Email address</label>
     <input type="email" value={email} className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" onChange={(e) => setEmail(e.target.value)}/>
     <div id="emailHelp" className="form-text">We'll never share your email with anyone else.</div>
@@ -64,19 +67,24 @@ if (isAuth) return <Navigate to="/" />;
     
  
 
-  <div className="mb-3">
+  <div className="mb-3 password-field">
     <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
     <input type="password" value={password} className="form-control" id="exampleInputPassword1" onChange={(e) => setPassword(e.target.value)}/>
   </div>
  
-  </div>
-  <button type="submit" isDisabled={loading ? true : false} onClick={handleForm} className="btn btn-primary">Sign Up</button>
-  <p>Allready user?
+  
+  <button type="submit" isDisabled={loading ? true : false} onClick={handleRegister} className="btn btn-primary w-100 mb-3 mt-2">Sign Up</button>
+  <p className="text-end">Allready user?
+  &nbsp;
     <ReactRouterLink to="/login">
         Login
     </ReactRouterLink>
   </p>
 </form>
+    </div>
+   
+    </>
+
     )
 }
 export default Register;

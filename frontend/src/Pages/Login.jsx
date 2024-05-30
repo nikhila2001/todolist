@@ -2,14 +2,14 @@ import axios from "axios";
 import { AppContext } from "../components/AppContextProvider";
 import React, { useContext, useState } from "react";
 import { Link as ReactRouterLink, Navigate } from "react-router-dom";
+import Profile from "./Profile";
 import { toast } from "react-hot-toast";
 
 const host = "http://localhost:4000/api";
 const config = {
   headers: {
     "Content-Type": "application/json",
-    token:
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjUzNGIyMjMxMzhiYTE1MzA1OTY1MTkiLCJpYXQiOjE3MTY3ODY4MjUsImV4cCI6MTcxNzM5MTYyNX0.ZYem6DQHgvTBidXBCG9H60Eye6i0fyIwyWjin0Tr_f4",
+    token:localStorage.getItem("token")
   },
 };
 
@@ -22,20 +22,27 @@ function Login() {
   // url and headers
 
   // handle login form
-  const handleForm = async (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     try {
+      console.log("is auth before login", isAuth);
       // axios request to login user
       const data = await axios.post(
+
         `${host}/user/login`,
         { email, password },
         config
       );
+      console.log(data.data.token, "token");
+      // storing the token in localstorage
+      localStorage.setItem('token', data.data.token);
       console.log("login form ", data);
       toast.success(data.message);
       setUserName(data.username);
       setIsAuth(true);
+      console.log("isAuth after login", isAuth);
+      // clear form data after login
       setEmail("");
       setPassword("");
       setIsLoading(false);
@@ -46,15 +53,17 @@ function Login() {
     }
   };
   // if user is authenticated the send them to the Home page
-  if (isAuth) return <Navigate to="/" />;
-  // {isloggedIn && <Navigate to="/" />}
+  if (isAuth && localStorage.getItem("token"))
+    
+    return <Navigate to="/" />;
 
   return (
     <>
-      <form className="form-container p-md-4 " style={{maxWidth:"30rem"}} >
+    <div className="d-flex justify-content-center align-items-center vw-100 vh-100">
+    <form className="form-container px-md-4 pt-md-4 " style={{minWidth:"30rem"}} >
         <h1>Login</h1>
         {/* Email Field */}
-        <div className="email-field">
+        <div className="email-field mb-3">
           <label htmlFor="exampleInputEmail1" className="form-label">
             Email address
           </label>
@@ -99,16 +108,18 @@ function Login() {
           type="submit"
           className="btn btn-primary w-100 mb-3"
           isdisabled={loading ? true : false}
-          onClick={handleForm}
+          onClick={handleLogin}
         >
           Sign in
         </button>
-        <p className="text-center mb-0">
+        <p className="text-end mb-3">
           New here?
           &nbsp;
           <ReactRouterLink to="/register">Register</ReactRouterLink>
         </p>
       </form>
+    </div>
+      
     </>
   );
 }

@@ -15,6 +15,14 @@ connectDB();
 app.use(cors({ origin: true, credentials: true }));
 app.use(express.json({ extended: false }));
 
+// Middleware to set cache-control headers
+app.use((req, res, next) => {
+  // Prevent caching of API responses
+  res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, private");
+  next();
+});
+
+
 app.get("/", (req, res) => {
   res.send("Server up and running");
 });

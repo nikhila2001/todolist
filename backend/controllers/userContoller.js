@@ -86,24 +86,7 @@ const loginUser = async (req, res) => {
   }
 };
 
-// Controller method for user logout
-const logoutUser = async (req, res) => {
-  try {
-    // Clear any session data or authentication tokens stored on the backend
-    
-    req.session.destroy((err) => {
-      if (err) {
-        throw err;
-      } else {
-        // Respond with a message indicating successful logout
-        res.status(200).json({ message: "Logout successful" });
-      }
-    });
-  } catch (error) {
-    // Handle any errors that occur during logout process
-    res.status(500).json({ message: "Error logging out" });
-  }
-};
+
 
 
 const getLoggedInUserDetails = async (req, res) => {
@@ -116,4 +99,4 @@ const getLoggedInUserDetails = async (req, res) => {
     res.status(500).json({ message: "Error retrieving use details" });
   }
 };
-module.exports = { registerUser, loginUser, logoutUser, getLoggedInUserDetails };
+module.exports = { registerUser, loginUser, getLoggedInUserDetails };
