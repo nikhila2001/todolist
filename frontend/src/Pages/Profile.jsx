@@ -1,18 +1,11 @@
 import { AppContext } from "../components/AppContextProvider";
 import React, { useContext, useEffect, useState } from "react";
-import Loader from "../components/Loader";
+// import Loader from "../components/Loader";
 import Logout from "../components/Logout";
-import axios from "axios";
+import { fetchUserDetails } from "../utils/userUtils"
 import { Navigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-// headers
-const host = "http://localhost:4000/api";
-const token = localStorage.getItem("token")
-const headers = {
-  "Content-Type": "application/json",
-  token: token
-};
 
 function Profile({}){
     const {  isAuth } = useContext(AppContext);
@@ -21,41 +14,33 @@ function Profile({}){
 
 
    useEffect(() => {
-      console.log(isAuth, "inside useEffect");
-      fetchUserDetails();
-  
-   }, [isAuth])
-
-
-
-
-     const  fetchUserDetails = async() => {
+    const getUserDetails = async () => {
       try {
-        const data = await axios.get(`${host}/user/me`, {headers});  
-        const userData = data.data.user
-        console.log("loggedIn user data", userData);
+        const userData = await fetchUserDetails();
         setUserDetails(userData);
       } catch (error) {
-        toast.error("something went wrong");
-        console.log("error fetching user details", error.message);
+        toast.error("Failed to fetch user detais", error.message);
       }
     }
+    if(isAuth){
+      getUserDetails();
+    }
+   }, [isAuth])
+
 
     if (!isAuth) return <Navigate to="/login" />;
     
     return (
-     <>
-  {/* Dropdown content goes here */}
-         <li style={{width:"15rem"}}>
-          <p>{userDetails.username}</p>
-         </li>
-         <li>
-          <p>{userDetails.email}</p>
-         </li>
-         <li>
-          <Logout/>
-         </li>
-     </>
+      <div>
+      {isAuth && localStorage.getItem("token") && (
+          <>
+              <p>Username: {userDetails.username}</p>
+              <p>Email: {userDetails.email}</p>
+              <Logout />
+          </>
+      )}
+  </div>
+     
     ) 
 }
 export default Profile;

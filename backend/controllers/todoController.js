@@ -35,37 +35,18 @@ const postCreateTodo = async (req, res) => {
   }
 };
 
-// update an existing todo  todo
-const putUpdateTodo = async (req, res) => {
-  try {
-    const {id, title, status, deadline } = req.body;
-    console.log("req body in updateTodo", req.body);
-    // create a new todo obj
-    const newTodo = {};
-    if (title) {
-      newTodo.title = title;
-      newTodo.status = status;
-      newTodo.deadline = deadline;
+  // update an existing todo  todo
+  const updateTodo = async (req, res) => {
+    try {
+      console.log("req.params:", req.params); // Check for presence of params
+
+      const updateTodo = await Todos.findByIdAndUpdate(req.params.id, req.body, {new:true});
+      res.json(updateTodo);
+    } catch (error) {
+      console.error("Error updating todo", error.message);
+      res.status(500).json({message: "Failed to update todo"});
     }
-    // find the todo to be updated
-    let todos = await Todos.findById(req.body.id);
-    if (!todos) {
-      return res.status(404).send("Not found");
-    }
-    if (todos.user.toString() !== req.user._id) {
-      console.log("user id - ", req.user._id);
-      return res.status(401).send("Not allowed to edit");
-    }
-    todos = await Todos.findByIdAndUpdate(
-      id,
-      { $set: newTodo },
-      { new: true }
-    );
-    res.json({ message: "Updated successfully", todos });
-  } catch (err) {
-    res.status(400).json({ message: "Failed to update", error: err.message });
-  }
-};
+  };
 
 // delete todo
 const deleteTodo = async (req, res) => {
@@ -88,4 +69,4 @@ const deleteTodo = async (req, res) => {
 
 
 
-module.exports = { getAllTodos, postCreateTodo, putUpdateTodo, deleteTodo };
+module.exports = { getAllTodos, postCreateTodo, updateTodo, deleteTodo };

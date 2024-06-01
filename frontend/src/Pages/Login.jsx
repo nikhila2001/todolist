@@ -38,7 +38,7 @@ function Login() {
       // storing the token in localstorage
       localStorage.setItem('token', data.data.token);
       console.log("login form ", data);
-      toast.success(data.message);
+      toast.success("Login Success");
       setUserName(data.username);
       setIsAuth(true);
       console.log("isAuth after login", isAuth);

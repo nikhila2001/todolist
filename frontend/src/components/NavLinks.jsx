@@ -26,17 +26,19 @@ function NavLinks() {
         </button>
         <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div className="navbar-nav ms-auto ">
-            <Link className="nav-link active" aria-current="page" to="/">
+            {isAuth ? ( <Link className="nav-link active" aria-current="page" to="/">
               Home
-            </Link>
-            <Link className="nav-link" to="/login">
+            </Link>) : ("")}
+           
+            {!isAuth ? (<Link className="nav-link" to="/login">
               Login
-            </Link>
+            </Link>) : ("")}
+            
             <Link className="nav-link" to="/Register">
               Register
             </Link>
             {/* Dropdown for profile component */}
-            {isAuth ? (  <div className="dropdown ms-auto " style={{ width: "10rem" }}>
+            {isAuth && localStorage.getItem("token") ? (  <div className="dropdown ms-auto " style={{ width: "10rem" }}>
               <Link
                 className="nav-link dropdown-toggle"
                 to="#"

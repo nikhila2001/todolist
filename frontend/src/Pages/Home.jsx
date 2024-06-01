@@ -4,6 +4,7 @@ import axios from "axios";
 import { toast } from "react-hot-toast";
 import TodoLists from "../components/TodoLists";
 import { Navigate } from "react-router-dom";
+import EditForm from "../components/EditForm";
 
 const host = "http://localhost:4000/api";
 
@@ -17,10 +18,13 @@ function Home() {
   const [title, setTitle] = useState("");
   const [status, setStatus] = useState("");
   const [deadline, setDeadline] = useState("");
+  const [editingTodo, setEditingTodo] = useState(null)
   const [loading, setLoading] = useState(false);
   const [userTasks, setUserTasks] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const { isAuth } = useContext(AppContext);
+  
+  const [showModal, setShowModal] = useState(false); 
 
   // get all tasks of a user
   const getAllTask = async () => {
@@ -35,7 +39,7 @@ function Home() {
   };
 
   // handle form data
-  const handleForm = async (e) => {
+  const handleAddtask = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -49,7 +53,7 @@ function Home() {
         {headers}
       );
       setLoading(false);
-      toast.success(data.message);
+      toast.success("Task added");
       setTitle("");
       setStatus("");
       setDeadline("");
@@ -77,6 +81,7 @@ function Home() {
         console.log(response.status);
         throw new Error("Faild to delete a task");
       }
+      toast.success("Todo Deleted")
       getAllTask();
     } catch (error) {
       console.error("Error deleting task :", error.message);
@@ -91,8 +96,8 @@ function Home() {
 
       <div className="d-flex justify-content-between p-md-3">
         <form
-          onSubmit={handleForm}
-          className="todo-container p-md-3 flex-grow-1"
+          onSubmit={handleAddtask}
+          className="todo-container p-md-3 "
           style={{ minWidth: "30rem" }}
         >
           <div className="mb-3 row">
@@ -151,23 +156,29 @@ function Home() {
         </form>
 
         {/* Table view of todos */}
-        <table className="table table-success table-hover  border-0 align-middle table-responsive-sm">
-          <thead>
+        {userTasks.length === 0 ? (<p>You don't have anything todo</p>) : (
+          <table className="table table-dark table-hover align-middle table-responsive-sm">
+          <thead className="">
             <tr>
-              <th scope="col">Title</th>
+              <th scope="col">Task</th>
               <th scope="col">Status</th>
               <th scope="col">Deadline</th>
-              <th scope="col">Action</th>
+              <th scope="col">Action Buttons</th>
             </tr>
           </thead>
           <tbody className="">
-            <TodoLists
-              todos={userTasks}
-              deadline={deadline}
-              deleteTodo={deleteTodo}
-            />
+            {userTasks.map((task) => (
+                <TodoLists
+                key={task._id}
+                task={task}
+                deleteTodo={deleteTodo}
+                userTasks={userTasks}
+                setUserTasks={setUserTasks}
+              />
+            ))}
           </tbody>
         </table>
+        )}
       </div>
     </>
   );

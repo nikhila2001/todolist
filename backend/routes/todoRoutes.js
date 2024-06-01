@@ -5,7 +5,7 @@ const authMiddleware = require("../middleware/authMiddleware.js");
 const {
   getAllTodos,
   postCreateTodo,
-  putUpdateTodo,
+  updateTodo,
   deleteTodo,
 } = require("../controllers/todoController.js");
 
@@ -13,7 +13,7 @@ router.get("/", authMiddleware, getAllTodos);
 
 router.post("/create", authMiddleware, postCreateTodo);
 
-router.post("/updateTodo", authMiddleware, putUpdateTodo);
+router.put("/updateTodo/:id", authMiddleware, updateTodo);
 
 router.post("/deleteTodo", authMiddleware, deleteTodo);
 

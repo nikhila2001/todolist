@@ -7,7 +7,7 @@ import { toast } from "react-hot-toast";
 const Logout = () => {
     const navigate = useNavigate();
 
-    const { setIsAuth, isAuth } = useContext(AppContext) 
+    const { setIsAuth } = useContext(AppContext) 
 
 
     const handleLogout = () => {
@@ -15,12 +15,13 @@ const Logout = () => {
         console.log("user logged out");
         // Clear JWT token from local storage upon logout
         localStorage.clear();
-        toast.success();
+        toast.success("Logged out successfully");
 
         // Redirect user to login page or any other page after logout
         console.log("user logged out");
-
+        
         navigate('/login');
+        setIsAuth(false)
         
     };
 
