@@ -6,16 +6,16 @@ import Profile from "../Pages/Profile";
 import Register from "../Pages/Register";
 
 function AllRoutes() {
-    return (
-      <div>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/register" element={<Register />} />
-        </Routes>
-      </div>
-    );
-  }
-  
-  export default AllRoutes;
+  return (
+    <div>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/register" element={<Register />} />
+      </Routes>
+    </div>
+  );
+}
+
+export default AllRoutes;

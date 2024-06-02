@@ -1,14 +1,15 @@
-import React, {  createContext, useState } from "react";
+import React, { createContext, useState } from "react";
 //create Context
 export const AppContext = createContext();
 
-const AppContextProvider = ({children}) => {
-    const [isAuth, setIsAuth] = useState(false);
-    const [loading, setIsLoading] = useState(false);
-    const [user, setUser] = useState({});
-    const [userName, setUserName] = useState("");
-    return (
-<AppContext.Provider value={{
+const AppContextProvider = ({ children }) => {
+  const [isAuth, setIsAuth] = useState(false);
+  const [loading, setIsLoading] = useState(false);
+  const [user, setUser] = useState({});
+  const [userName, setUserName] = useState("");
+  return (
+    <AppContext.Provider
+      value={{
         setIsAuth,
         isAuth,
         loading,
@@ -17,10 +18,11 @@ const AppContextProvider = ({children}) => {
         setUser,
         userName,
         setUserName,
-      }}>
-    {children}
-</AppContext.Provider>
-    )
+      }}
+    >
+      {children}
+    </AppContext.Provider>
+  );
 };
 
 export default AppContextProvider;

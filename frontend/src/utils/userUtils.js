@@ -9,7 +9,7 @@ export const fetchUserDetails = async () => {
     const token = localStorage.getItem("token");
     const headers = {
       "Content-Type": "application/json",
-      token: token
+      token: token,
     };
     const response = await axios.get(`${host}/user/me`, { headers });
     return response.data.user;
