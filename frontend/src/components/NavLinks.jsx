@@ -8,7 +8,7 @@ function NavLinks() {
 
   return (
     <nav
-      className="navbar navbar-expand-lg bg-dark border-bottom border-body "
+      className="navbar navbar-expand-lg bg-dark border-bottom border-body"
       data-bs-theme="dark"
     >
       <div className="container-fluid">

@@ -6,7 +6,7 @@ import { fetchUserDetails } from "../utils/userUtils";
 import { Navigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
-function Profile({}) {
+function Profile() {
   const { isAuth } = useContext(AppContext);
   console.log(isAuth, "isAuth");
   const [userDetails, setUserDetails] = useState({});

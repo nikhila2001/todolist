@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function EditForm({ task, onUpdate, onCancel, handleClose }) {
+function EditForm({ task, onUpdate, onCancel }) {
   const [title, setTitle] = useState(task.title);
   const [status, setStatus] = useState(task.status);
   const [deadline, setDeadline] = useState(task.deadline);
@@ -21,7 +21,7 @@ function EditForm({ task, onUpdate, onCancel, handleClose }) {
           <div className="col-sm-10 input-field">
             <input
               type="text"
-              className="form-control"
+              className="form-control text-secondary"
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -36,7 +36,7 @@ function EditForm({ task, onUpdate, onCancel, handleClose }) {
           <div className="col-sm-10 input-field">
             <input
               type="text"
-              className="form-control"
+              className="form-control text-secondary"
               id="inputStatus"
               value={status}
               onChange={(e) => setStatus(e.target.value)}
@@ -51,7 +51,7 @@ function EditForm({ task, onUpdate, onCancel, handleClose }) {
           <div className="col-sm-10 input-field">
             <input
               type="date"
-              className="form-control"
+              className="form-control text-secondary"
               id="inputDeadline"
               value={deadline}
               onChange={(e) => setDeadline(e.target.value)}
@@ -69,6 +69,7 @@ function EditForm({ task, onUpdate, onCancel, handleClose }) {
           </button>
           <button
             className=" btn btn-outline-danger"
+            data-bs-dismiss="modal"
             type="button"
             onClick={onCancel}
           >

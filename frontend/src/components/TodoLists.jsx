@@ -56,10 +56,10 @@ function TodoLists({ task, deleteTodo, userTasks, setUserTasks }) {
   return (
     <>
       <tr>
+        <td>{}</td>
         <td>{task.title}</td>
         <td>{task.status}</td>
-        <td>{formattedDeadline}</td>
-        <td className="d-flex">
+        <td className="">
           <button
             className="btn text-success"
             onClick={() => handleEdit(task)}
@@ -85,7 +85,6 @@ function TodoLists({ task, deleteTodo, userTasks, setUserTasks }) {
                     </h1>
                     <button
                       type="button"
-                      onclick="fn()"
                       className="btn-close bg-light"
                       data-bs-dismiss="modal"
                       aria-label="Close"
@@ -103,8 +102,10 @@ function TodoLists({ task, deleteTodo, userTasks, setUserTasks }) {
             </div>
           )}
           <button
-            className=" btn  text-danger "
-            onClick={() => deleteTodo(task._id)}
+            className="btn text-danger"
+            onClick={() => {
+              deleteTodo(task._id);
+            }}
           >
             Delete
           </button>

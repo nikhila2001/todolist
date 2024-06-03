@@ -35,18 +35,20 @@ const postCreateTodo = async (req, res) => {
   }
 };
 
-  // update an existing todo  todo
-  const updateTodo = async (req, res) => {
-    try {
-      console.log("req.params:", req.params); // Check for presence of params
+// update an existing todo  todo
+const updateTodo = async (req, res) => {
+  try {
+    console.log("req.params:", req.params); // Check for presence of params
 
-      const updateTodo = await Todos.findByIdAndUpdate(req.params.id, req.body, {new:true});
-      res.json(updateTodo);
-    } catch (error) {
-      console.error("Error updating todo", error.message);
-      res.status(500).json({message: "Failed to update todo"});
-    }
-  };
+    const updateTodo = await Todos.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+    res.json(updateTodo);
+  } catch (error) {
+    console.error("Error updating todo", error.message);
+    res.status(500).json({ message: "Failed to update todo" });
+  }
+};
 
 // delete todo
 const deleteTodo = async (req, res) => {
@@ -63,10 +65,10 @@ const deleteTodo = async (req, res) => {
     const deletedTodo = await Todos.findByIdAndDelete(req.body.id);
     res.json({ message: "todo deleted successfully", deletedTodo });
   } catch (err) {
-    res.status(404).json({ message: "Failed to delete todo", error: err.message });
+    res
+      .status(404)
+      .json({ message: "Failed to delete todo", error: err.message });
   }
 };
-
-
 
 module.exports = { getAllTodos, postCreateTodo, updateTodo, deleteTodo };
