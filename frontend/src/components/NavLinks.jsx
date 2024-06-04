@@ -27,7 +27,7 @@ function NavLinks() {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <div className="navbar-nav" style={{ marginLeft: "70rem" }}>
+          <div className="navbar-nav ">
             {isAuth ? (
               <Link className="nav-link active" aria-current="page" to="/">
                 Home
@@ -49,7 +49,7 @@ function NavLinks() {
             </Link>
             {/* Dropdown for profile component */}
             {isAuth && localStorage.getItem("token") ? (
-              <div className="dropdown" style={{ width: "10rem" }}>
+              <div className="dropdown" >
                 <Link
                   className="nav-link dropdown-toggle"
                   to="#"

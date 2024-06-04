@@ -23,9 +23,14 @@ const Logout = () => {
   };
 
   return (
-    <button className="border-0 p-2 btn text-info ps-0" onClick={handleLogout}>
+    <>
+    <button className="border-0 btn p-0 text-primary" onClick={handleLogout}>
       Logout
     </button>
+    
+  
+    </>
+   
   );
 };
 export default Logout;

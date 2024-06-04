@@ -17,7 +17,6 @@ function Login() {
     useContext(AppContext);
 
   // validation schema
-
   const validationSchema = Yup.object().shape({
     email: Yup.string().email("Invalid email").required("Email is required"),
     password: Yup.string().required("Password is required"),
@@ -64,17 +63,17 @@ function Login() {
         >
           <Form
             className="form-contents px-md-4 pt-md-4"
-            style={{ minWidth: "30rem" }}
+            
           >
             <h1>Login</h1>
             {/* Email Field */}
-            <div className="email-field mb-3">
+            <div className="email-field ">
               <label htmlFor="email" className="form-label">
                 Email address
               </label>
               <Field
                 type="email"
-                className="form-control"
+                className="form-control border-secondary"
                 id="email"
                 name="email"
                 required
@@ -95,7 +94,7 @@ function Login() {
               </label>
               <Field
                 type="password"
-                className="form-control"
+                className="form-control border-secondary"
                 id="password"
                 name="password"
                 required

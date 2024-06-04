@@ -49,7 +49,7 @@ function Home() {
         `${host}/todos/create`,
         {
           title: values.title,
-          status: values.status,
+          status:values.status,
           deadline: values.deadline,
         },
         { headers }
@@ -74,7 +74,10 @@ function Home() {
       const response = await axios.post(
         `${host}/todos/deleteTodo`,
         { id },
-        { headers }
+        {  headers: {
+          "Content-Type": "application/json",
+          token: localStorage.getItem("token"),
+        } }
       );
       if (response.status !== 200) {
         console.log(response.status);
@@ -93,24 +96,24 @@ function Home() {
     <>
       {/* Form to add the todo */}
 
-      <div className="">
-        <h1>To Do App</h1>
+      <div className="home p-md-4">
+        <h1 className="text-center mb-5">To Do App</h1>
         <Formik
           initialValues={{
             title: "",
-            status: "",
+            status:"",
             deadline: "",
           }}
           validationSchema={validationSchema}
           onSubmit={handleAddtask}
         >
           {({ errors, touched }) => (
-            <Form className="d-flex">
-              <div className="">
+            <Form className="d-flex justify-content-center mb-md-5">
+              <div className="me-3">
                 <Field
                   type="text"
                   placeholder="enter your task here"
-                  className={`form-control  ${
+                  className={`form-control p-2 border-secondary ${
                     errors.title && touched.title ? "is-invalid" : ""
                   }`}
                   id="title"
@@ -123,14 +126,14 @@ function Home() {
                 />
               </div>
 
-              <div className="">
+              <div className="me-3">
                 <Field
                   type="text"
-                  placeholder="status"
-                  className={`form-control  ${
+                  placeholder="enter task status"
+                  className={`form-control p-2 border-secondary ${
                     errors.status && touched.status ? "is-invalid" : ""
                   }`}
-                  id="inputStatus"
+                  id="status"
                   name="status"
                 />
                 <ErrorMessage
@@ -140,11 +143,11 @@ function Home() {
                 />
               </div>
 
-              <div className="">
+              <div className="me-3 ">
                   <Field
                     type="date"
                     placeholder="enter date"
-                    className={`form-control input-field ${
+                    className={`form-control p-2 border-secondary ${
                       errors.deadline && touched.deadline ? "is-invalid" : ""
                     }`}
                     id="inputDeadline"
@@ -157,8 +160,8 @@ function Home() {
                     className="invalid-feedback"
                   />
               </div>
-              <button type="submit" className="">
-                ADD TASK
+              <button type="submit" className="mb-auto px-3 btn btn-primary">
+              Add
               </button>
             </Form>
           )}
@@ -170,22 +173,22 @@ function Home() {
             You don't have anything todo :)
           </p>
         ) : (
-          <table className="table  table-hover align-middle table-responsive-sm ">
-            <thead className="">
-              <tr>
-                <th scope="col" style={{ color: "#e5c07b" }}>
+          <table className="table  table-hover align-middle table-responsive-xl ">
+            <thead>
+              <tr className="columns">
+                <th className="text-start" scope="col" >
                   No.
                 </th>
-                <th scope="col" style={{ color: "#e5c07b" }}>
+                <th scope="col" >
                   Todo item
                 </th>
-                <th scope="col" style={{ color: "#e5c07b" }}>
+                <th scope="col" >
                   Status
                 </th>
-                <th scope="col" style={{ color: "#e5c07b" }}>
+                <th scope="col" >
                   Deadline
                 </th>
-                <th scope="col" style={{ color: "#e5c07b" }}>
+                <th scope="col" >
                   Actions
                 </th>
               </tr>

@@ -4,7 +4,7 @@ const {
   registerUser,
   loginUser,
   getLoggedInUserDetails,
-  logoutUser
+  
 } = require("../controllers/userContoller.js");
 const authenticateUser = require("../middleware/authMiddleware");
 
@@ -14,8 +14,10 @@ router.post("/register", registerUser);
 // login user route
 router.post("/login", loginUser);
 
-
 // protcted route requires authentication
 router.get("/me", authenticateUser, getLoggedInUserDetails);
+
+// edit user profile
+router.post("/editUser", authenticateUser)
 
 module.exports = router;

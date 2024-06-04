@@ -53,7 +53,7 @@ function Register() {
         >
           <Form
             className="form-contents px-md-4 pt-md-4"
-            style={{ minWidth: "30rem" }}
+            
           >
             <h1>Register</h1>
 
@@ -63,7 +63,7 @@ function Register() {
               </label>
               <Field
                 type="text"
-                className="form-control"
+                className="form-control border-secondary"
                 id="username"
                 name="username"
                 placeholder="Enter your name"
@@ -75,13 +75,13 @@ function Register() {
               />
             </div>
 
-            <div className="email-field mb-3">
+            <div className="email-field ">
               <label htmlFor="email" className="form-label fs-6">
                 Email address
               </label>
               <Field
                 type="email"
-                className="form-control"
+                className="form-control border-secondary"
                 id="email"
                 name="email"
                 placeholder="example@gmail.com"
@@ -102,7 +102,7 @@ function Register() {
               </label>
               <Field
                 type="password"
-                className="form-control"
+                className="form-control border-secondary"
                 id="password"
                 name="password"
               />

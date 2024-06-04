@@ -7,7 +7,7 @@ import Register from "../Pages/Register";
 
 function AllRoutes() {
   return (
-    <div>
+    <div className="main">
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />

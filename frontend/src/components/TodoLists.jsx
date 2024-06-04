@@ -1,7 +1,6 @@
 // TodoLists.jsx
 import React from "react";
 import { useState } from "react";
-import EditForm from "../components/EditForm";
 import axios from "axios";
 import toast from "react-hot-toast";
 
@@ -55,24 +54,25 @@ function TodoLists({ task, deleteTodo,index, setUserTasks }) {
     setEditingTodo(false);
     setUpdatedTask(task);
   };
-
+  
   return (
     <>
       <tr>
         <td>{index}</td>
-        <td>{editingTodo ? <input name="title" value={updatedTask.title} onChange={handleChange}/> : task.title}</td>
-        <td>{editingTodo ? <input name="status" value={updatedTask.status} onChange={handleChange}/> : task.status}</td>
-        <td>{editingTodo ? <input type="date" name="deadline" value={updatedTask.deadline} onChange={handleChange}/> : formattedDeadline}</td>
+        <td>{editingTodo ? <input className="w-100 p-2" name="title" value={updatedTask.title} onChange={handleChange}/> : task.title}</td>
+        <td>{editingTodo ? <input className="w-100 p-2" name="status" value={updatedTask.status} onChange={handleChange}/> : task.status}</td>
+        <td>{editingTodo ? <input className="w-100 p-2" type="date" name="deadline" value={updatedTask.deadline} onChange={handleChange}/> : formattedDeadline}</td>
         <td className="">
         {editingTodo ? (
           <>
-            <button className="btn text-success" onClick={handleUpdate}>Save</button>
-            <button className="btn text-secondary" onClick={handleCancel}>Cancel</button>
+            <button className="btn text-success" onClick={handleUpdate}><h5><i className="bi bi-check-lg"></i></h5></button>
+            <button className="btn text-secondary" onClick={handleCancel}><h5><i className="bi bi-x-circle text-danger"></i></h5> </button>
           </>
         ) : (
-          <button className="btn text-primary" onClick={handleEdit}>Edit</button>
+          <button className="btn text-primary" onClick={handleEdit}><h5><i className="bi bi-pencil"></i></h5></button>
         )}
-        <button className="btn text-danger" onClick={() => deleteTodo(task._id)}>Delete</button>
+        <button className="btn text-danger" onClick={() => deleteTodo(task._id)}><h5><i className="bi bi-trash3"></i></h5></button>
+
       </td>
         
       </tr>

@@ -87,8 +87,6 @@ const loginUser = async (req, res) => {
 };
 
 
-
-
 const getLoggedInUserDetails = async (req, res) => {
   try {
     // Access user data from the request object after authentication
@@ -99,4 +97,12 @@ const getLoggedInUserDetails = async (req, res) => {
     res.status(500).json({ message: "Error retrieving use details" });
   }
 };
+
+const updateUserDetails = async (req,res) => {
+  try {
+    
+  } catch (error) {
+    
+  }
+}
 module.exports = { registerUser, loginUser, getLoggedInUserDetails };
