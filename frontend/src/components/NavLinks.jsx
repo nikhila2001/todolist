@@ -8,8 +8,8 @@ function NavLinks() {
 
   return (
     <nav
-      className="navbar navbar-expand-lg bg-dark border-bottom border-body"
-      data-bs-theme="dark"
+      className="navbar navbar-expand-lg  border-bottom border-body"
+      
     >
       <div className="container-fluid">
         <Link className="navbar-brand fw-bold" href="#">
@@ -61,7 +61,7 @@ function NavLinks() {
                   Profile
                 </Link>
                 <ul
-                  className="dropdown-menu p-3 dropdown-menu-dark"
+                  className="dropdown-menu p-3 "
                   aria-labelledby="profileDropdown"
                 >
                   <Profile />

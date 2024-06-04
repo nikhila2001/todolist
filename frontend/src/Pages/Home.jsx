@@ -29,10 +29,12 @@ function Home() {
   const getAllTask = async () => {
     try {
       // Fetching tasks based on user id
-      let response = await axios.get(`${host}/todos`, { headers: {
-        "Content-Type": "application/json",
-        token: localStorage.getItem("token"),
-      } });
+      let response = await axios.get(`${host}/todos`, {
+        headers: {
+          "Content-Type": "application/json",
+          token: localStorage.getItem("token"),
+        },
+      });
       setUserTasks(response.data);
     } catch (error) {
       console.log("error:", error);
@@ -48,7 +50,7 @@ function Home() {
         {
           title: values.title,
           status: values.status,
-          // deadline: values.deadline,
+          deadline: values.deadline,
         },
         { headers }
       );
@@ -91,67 +93,54 @@ function Home() {
     <>
       {/* Form to add the todo */}
 
-       <div className="">
+      <div className="">
         <h1>To Do App</h1>
         <Formik
           initialValues={{
             title: "",
             status: "",
-            // deadline: "",
+            deadline: "",
           }}
           validationSchema={validationSchema}
           onSubmit={handleAddtask}
         >
           {({ errors, touched }) => (
             <Form className="d-flex">
-              
-               
-                <div className="">
-                  <Field
-                    type="text"
-                    placeholder="enter your task here"
-                    className={`form-control  ${
-                      errors.title && touched.title ? "is-invalid" : ""
-                    }`}
-                    id="title"
-                    name="title"
-                  />
-                  <ErrorMessage
-                    name="title"
-                    component="div"
-                    className="invalid-feedback"
-                  />
-                </div>
-             
+              <div className="">
+                <Field
+                  type="text"
+                  placeholder="enter your task here"
+                  className={`form-control  ${
+                    errors.title && touched.title ? "is-invalid" : ""
+                  }`}
+                  id="title"
+                  name="title"
+                />
+                <ErrorMessage
+                  name="title"
+                  component="div"
+                  className="invalid-feedback"
+                />
+              </div>
 
-              
-               
-                <div className="">
-                  <Field
-                    type="text"
-                    placeholder="status"
-                    className={`form-control  ${
-                      errors.status && touched.status ? "is-invalid" : ""
-                    }`}
-                    id="inputStatus"
-                    name="status"
-                  />
-                  <ErrorMessage
-                    name="status"
-                    component="div"
-                    className="invalid-feedback"
-                  />
-                </div>
-              
+              <div className="">
+                <Field
+                  type="text"
+                  placeholder="status"
+                  className={`form-control  ${
+                    errors.status && touched.status ? "is-invalid" : ""
+                  }`}
+                  id="inputStatus"
+                  name="status"
+                />
+                <ErrorMessage
+                  name="status"
+                  component="div"
+                  className="invalid-feedback"
+                />
+              </div>
 
-              {/* <div className="mb-3 row">
-                <label
-                  htmlFor="inputDeadline"
-                  className="col-sm-2 col-form-label"
-                >
-                  Deadline
-                </label>
-                <div className="col-sm-10 ">
+              <div className="">
                   <Field
                     type="date"
                     placeholder="enter date"
@@ -160,30 +149,28 @@ function Home() {
                     }`}
                     id="inputDeadline"
                     name="deadline"
+                    min={new Date().toISOString().split("T")[0]}
                   />
                   <ErrorMessage
                     name="deadline"
                     component="div"
                     className="invalid-feedback"
                   />
-                </div>
-              </div> */}
-              <button
-                type="submit"
-                className=""
-               
-              >
+              </div>
+              <button type="submit" className="">
                 ADD TASK
               </button>
             </Form>
           )}
-        </Formik> 
-        
+        </Formik>
+
         {/* Table view of todos */}
         {userTasks.length === 0 ? (
-          <p className="m-auto text-center mt-sm-4 fw-bold fs-2">You don't have anything todo :)</p>
+          <p className="m-auto text-center mt-sm-4 fw-bold fs-2">
+            You don't have anything todo :)
+          </p>
         ) : (
-          <table className="table table-dark table-hover align-middle table-responsive-sm mt-sm-3">
+          <table className="table  table-hover align-middle table-responsive-sm ">
             <thead className="">
               <tr>
                 <th scope="col" style={{ color: "#e5c07b" }}>
@@ -196,15 +183,19 @@ function Home() {
                   Status
                 </th>
                 <th scope="col" style={{ color: "#e5c07b" }}>
+                  Deadline
+                </th>
+                <th scope="col" style={{ color: "#e5c07b" }}>
                   Actions
                 </th>
               </tr>
             </thead>
             <tbody className="">
-              {userTasks.map((task) => (
+              {userTasks.map((task,index) => (
                 <TodoLists
                   key={task._id}
                   task={task}
+                  index={index + 1} // task number
                   deleteTodo={deleteTodo}
                   userTasks={userTasks}
                   setUserTasks={setUserTasks}
