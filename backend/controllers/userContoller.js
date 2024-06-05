@@ -100,9 +100,26 @@ const getLoggedInUserDetails = async (req, res) => {
 
 const updateUserDetails = async (req,res) => {
   try {
-    
+    console.log(req.body,"request body");
+    const {username, phone, address} = req.body;
+    const userId = req.user._id;
+    console.log("userId", userId);
+    // find the user by id
+    let user = await User.findById(userId);
+
+    // update user details
+    if(username) user.username = username;
+    if (phone) user.phone = phone;
+    if (address) user.address = address;
+
+    // Save the updated user
+    console.log("updated user", user);
+    await user.save();
+    res.json({ message: 'Profile updated successfully' });
+
   } catch (error) {
-    
+    console.log('Error updating profile', error.message);
+    res.status(500).json({message: 'Failed to update profile'})
   }
 }
-module.exports = { registerUser, loginUser, getLoggedInUserDetails };
+module.exports = { registerUser, loginUser, getLoggedInUserDetails ,updateUserDetails};

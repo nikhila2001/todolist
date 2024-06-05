@@ -43,6 +43,10 @@ const updateTodo = async (req, res) => {
     const updateTodo = await Todos.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
+
+    if (!updateTodo) {
+      return res.status(404).json({ message: "Todo not found" });
+    }
     res.json(updateTodo);
   } catch (error) {
     console.error("Error updating todo", error.message);

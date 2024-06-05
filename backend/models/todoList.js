@@ -15,6 +15,10 @@ const TodoSchema = new mongoose.Schema({
   deadline: {
     type: Date,
   },
+  completed: {
+    type:Boolean,
+    default:false, // Default to false (not completed)
+  }
 });
 
 const Todos = mongoose.model("todos", TodoSchema);

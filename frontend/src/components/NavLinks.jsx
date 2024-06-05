@@ -1,10 +1,15 @@
 import { Link } from "react-router-dom";
 import Profile from "../Pages/Profile";
 import { AppContext } from "./AppContextProvider";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 
 function NavLinks() {
   const { isAuth } = useContext(AppContext);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+
+  const handleProfileDropdownToggle = () => {
+    setIsProfileDropdownOpen(true)
+  } 
 
   return (
     <nav
@@ -49,22 +54,23 @@ function NavLinks() {
             </Link>
             {/* Dropdown for profile component */}
             {isAuth && localStorage.getItem("token") ? (
-              <div className="dropdown" >
+              <div className="dropdown profile-link" >
                 <Link
-                  className="nav-link dropdown-toggle"
+                  className="nav-link dropdown-toggle "
                   to="#"
                   id="profileDropdown"
                   role="button"
                   data-bs-toggle="dropdown"
-                  aria-expanded="false"
+                  onClick={handleProfileDropdownToggle}
+                  aria-expanded={isProfileDropdownOpen}
                 >
                   Profile
                 </Link>
                 <ul
-                  className="dropdown-menu p-3 "
+                  className={`dropdown-menu p-3 profile-width ${isProfileDropdownOpen ? 'show' : ""}`}
                   aria-labelledby="profileDropdown"
                 >
-                  <Profile />
+                  <Profile toggleDropdown={setIsProfileDropdownOpen}/>
                 </ul>
               </div>
             ) : (

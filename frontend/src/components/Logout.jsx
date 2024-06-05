@@ -24,9 +24,10 @@ const Logout = () => {
 
   return (
     <>
-    <button className="border-0 btn p-0 text-primary" onClick={handleLogout}>
+
+    <a type="btn" className="border-0 btn p-0 text-primary " onClick={handleLogout}>
       Logout
-    </button>
+    </a>
     
   
     </>

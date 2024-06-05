@@ -17,3 +17,4 @@ export const fetchUserDetails = async () => {
     throw new Error("Failed to fetch user details", error.message);
   }
 };
+

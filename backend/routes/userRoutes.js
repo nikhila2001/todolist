@@ -4,6 +4,7 @@ const {
   registerUser,
   loginUser,
   getLoggedInUserDetails,
+  updateUserDetails
   
 } = require("../controllers/userContoller.js");
 const authenticateUser = require("../middleware/authMiddleware");
@@ -18,6 +19,6 @@ router.post("/login", loginUser);
 router.get("/me", authenticateUser, getLoggedInUserDetails);
 
 // edit user profile
-router.post("/editUser", authenticateUser)
+router.post("/editUser", authenticateUser, updateUserDetails);
 
 module.exports = router;

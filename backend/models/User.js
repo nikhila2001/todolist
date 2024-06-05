@@ -20,6 +20,12 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: new Date(),
   },
+  phone: {
+    type: String
+  },
+  address: {
+    type: String
+  }
 });
 
 const User = mongoose.model("user", UserSchema);
