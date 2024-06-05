@@ -11,19 +11,18 @@ const headers = {
   token: localStorage.getItem("token"),
 };
 
-function TodoLists({ task, deleteTodo,index, setUserTasks }) {
+function TodoLists({ task, deleteTodo, index, setUserTasks }) {
   // const [userTasks, setUserTasks] = useState([]);
   const [editingTodo, setEditingTodo] = useState(false);
   const [updatedTask, setUpdatedTask] = useState(task); // State to hold updated task data
-  const [markAsDone, setMarkAsDone] = useState(false);
-
+  const [markAsDone, setMarkAsDone] = useState(task.completed || false);
 
   const formattedDeadline =
     new Date(task.deadline).toDateString() || "Invalid Date";
 
   // handle editing a todo
   const handleEdit = (task) => {
-  setEditingTodo(true);
+    setEditingTodo(true);
   };
 
   const handleUpdate = async () => {
@@ -57,38 +56,121 @@ function TodoLists({ task, deleteTodo,index, setUserTasks }) {
     setUpdatedTask(task);
   };
 
-  const handleTaskComplete = () => {
+  const handleTaskComplete = async () => {
     try {
-      
+      const updatedTask = {
+        completed: !markAsDone, // toggle the completed state
+      };
+      const response = await axios.put(
+        `${host}/todos/updateTodo/${task._id}`,
+        updatedTask,
+        { headers }
+      );
+      setUserTasks((prevTasks) =>
+        prevTasks.map((t) => (t._id === task._id ? response.data : t))
+      );
+      setMarkAsDone((prevMode) => !prevMode); // Update local state for UI change
+      toast.success(markAsDone ? "Marked as Incomplete" : "Marked as Done");
     } catch (error) {
-      
+      console.error("Error marking todo as done", error.message);
+      toast.error("Failed to update task status");
     }
-    console.log("mark as done");
-    setMarkAsDone(true);
-  }
-  
+  };
+
   return (
     <>
       <tr>
         <td>{index}</td>
-        <td className={`${markAsDone ? "text-decoration-line-through" : ""}`}>{editingTodo ? <input className="w-100 p-2" name="title" value={updatedTask.title} onChange={handleChange}/> : task.title}</td>
-        <td>{editingTodo ? <input className="w-100 p-2" name="status" value={updatedTask.status} onChange={handleChange}/> : task.status}</td>
-        <td>{editingTodo ? <input className="w-100 p-2" type="date" name="deadline" value={updatedTask.deadline} onChange={handleChange}/> : formattedDeadline}</td>
+        <td className={`${markAsDone ? "text-decoration-line-through" : ""}`}>
+          {editingTodo ? (
+            <input
+              className="w-100 p-2"
+              name="title"
+              value={updatedTask.title}
+              onChange={handleChange}
+            />
+          ) : (
+            task.title
+          )}
+        </td>
+        <td>
+          {editingTodo ? (
+            <input
+              className="w-100 p-2"
+              name="status"
+              value={updatedTask.status}
+              onChange={handleChange}
+            />
+          ) : (
+            task.status
+          )}
+        </td>
+        <td>
+          {editingTodo ? (
+            <input
+              className="w-100 p-2"
+              type="date"
+              name="deadline"
+              value={updatedTask.deadline}
+              onChange={handleChange}
+            />
+          ) : (
+            formattedDeadline
+          )}
+        </td>
         <td className="">
-        {editingTodo ? (
-          <>
-            <button className="btn text-success" name="save" onClick={handleUpdate}><h5><i className="bi bi-check-lg"></i></h5></button>
-            <button className="btn text-secondary" name="cancel" onClick={handleCancel}><h5><i className="bi bi-x-circle text-danger"></i></h5> </button>
-          </>
-        ) : (
-          <button className="btn text-primary" name="edit" onClick={handleEdit}><h5><i className="bi bi-pencil"></i></h5></button>
-        )}
-        <button className="btn text-primary" name="mark as done" onClick={() => handleTaskComplete}><h5><i class="bi bi-check2-square"></i></h5></button>
+          {editingTodo ? (
+            <>
+              <button
+                className="btn text-success"
+                name="save"
+                onClick={handleUpdate}
+              >
+                <h5>
+                  <i className="bi bi-check-lg"></i>
+                </h5>
+              </button>
+              <button
+                className="btn text-secondary"
+                name="cancel"
+                onClick={handleCancel}
+              >
+                <h5>
+                  <i className="bi bi-x-circle text-danger"></i>
+                </h5>{" "}
+              </button>
+            </>
+          ) : (
+            <button
+              className="btn text-primary"
+              name="edit"
+              onClick={handleEdit}
+            >
+              <h5>
+                <i className="bi bi-pencil"></i>
+              </h5>
+            </button>
+          )}
+          <button
+            className="btn text-primary"
+            name="mark as done"
+            onClick={handleTaskComplete}
+          >
+            <h5>
+              <i className="bi bi-check2-square"></i>
+            </h5>
+          </button>
 
-        <button className="btn text-danger" name="delete" onClick={() => deleteTodo(task._id)}><h5><i className="bi bi-trash3"></i></h5></button>
-
-      </td>
-        
+          <button
+            className="btn text-danger"
+            name="delete"
+            onClick={() => deleteTodo(task._id)}
+          >
+            <h5>
+              <i className="bi bi-trash3"></i>
+            </h5>
+          </button>
+        </td>
       </tr>
     </>
   );

@@ -9,22 +9,45 @@ import axios from "axios";
 
 const host = "http://localhost:4000/api";
 
-function Profile({ toggleDropdown }) {
+function Profile() {
   const { isAuth } = useContext(AppContext);
   console.log(isAuth, "isAuth");
   const [userDetails, setUserDetails] = useState({});
   const [editProfile, setEditprofile] = useState(false);
-  const [updatedDetails, setUpdatedDetails] = useState({
-    username: "",
-    address: "",
-    phone: "",
-  });
+  const [updatedDetails, setUpdatedDetails] = useState({});
+  const [errors, setErrors] = useState({});
+
+  // form validation function
+  const validateForm = () => {
+    let formIsValid = true;
+    const formErrors = {};
+
+    // validate username
+    if(/^\d{10}$/.test(updatedDetails.username)){
+      formIsValid = false;
+      formErrors.username = "username cannot be a number"
+    }
+
+    // validate phone number
+    if(!/^\d{10}$/.test(updatedDetails.phone)) {
+      formIsValid = false;
+      formErrors.phone = "Phone number must be 10 digits"
+    }
+    setErrors(formErrors);
+    return formIsValid;
+  }
 
   useEffect(() => {
     const getUserDetails = async () => {
       try {
         const userData = await fetchUserDetails();
         setUserDetails(userData);
+         // Prefill the form fields with user details
+      setUpdatedDetails({
+        username: userData.username || "",
+        address: userData.address || "",
+        phone: userData.phone || "",
+      });
       } catch (error) {
         toast.error("Failed to fetch user detais", error.message);
       }
@@ -34,36 +57,42 @@ function Profile({ toggleDropdown }) {
     }
   }, [isAuth]);
 
-  const handleEditProfile = () => {
+  const handleEditProfile = (e) => {
+    e.stopPropagation(); // Prevent event bubbling
     console.log("edit button clicked");
-    toggleDropdown(true);
     setEditprofile(true);
   };
-
+ 
+  // save user details after editing
   const handleSaveProfile = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      const headers = {
-        "Content-Type": "application/json",
-        token: token,
-      };
-      const response = await axios.post(
-        `${host}/user/editUser`,
-        updatedDetails,
-        { headers }
-      );
-      toast.success(response.data.message);
-
-      // Fetch updated user details after successful update
-      const updatedUserDetails = await fetchUserDetails();
-      setUserDetails(updatedUserDetails); // Update userDetails state
-
-      // Clear the edit mode
-      setEditprofile(false);
-    } catch (error) {
-      toast.error("Failed to update profiel", error.message);
+    if(validateForm()) {
+      try {
+        //headers
+        const token = localStorage.getItem("token");
+        const headers = {
+          "Content-Type": "application/json",
+          token: token,
+        };
+        // axios post request
+        const response = await axios.post(
+          `${host}/user/editUser`,
+          updatedDetails,
+          { headers }
+        );
+        toast.success(response.data.message);
+  
+        // Fetch updated user details after successful update
+        const updatedUserDetails = await fetchUserDetails();
+        setUserDetails(updatedUserDetails); // Update userDetails state
+  
+        // Clear the edit mode
+        setEditprofile(false);
+      } catch (error) {
+        toast.error("Failed to update profiel", error.message);
+      }
+    };
     }
-  };
+    
 
   if (!isAuth) return <Navigate to="/login" />;
 
@@ -85,21 +114,28 @@ function Profile({ toggleDropdown }) {
           <p className="custom-color text-start mb-0">
             <small className="mb-0">{userDetails.email}</small>
           </p>
-          {updatedDetails ? (
+           
             <>
+            {userDetails.address !== undefined ? (
               <small className="custom-color text-capitalize mb-0">
-                <i class="bi bi-geo-alt"></i>&nbsp;{`${userDetails.address}`}
+                <i className="bi bi-geo-alt"></i>&nbsp;{`${userDetails.address}`}
               </small>
-              <small className="custom-color d-block">
-                <i class="bi bi-telephone"></i>&nbsp;{`${userDetails.phone}`}
-              </small>
+            ) : ""}
+            {userDetails.phone ? (
+          <small className="custom-color d-block">
+          <i className="bi bi-telephone"></i>&nbsp;{`${userDetails.phone}`}
+          </small>
+            ) : ("")}
+              
+             
             </>
-          ) : ("")}
+           
 
           {/* profile edit form */}
           {editProfile ? (
             <>
-              <div className="mt-2">
+            
+              <div className="mt-4">
                 {/*Name field*/}
                 <small>
                   <label htmlFor="username">Name</label>
@@ -116,6 +152,7 @@ function Profile({ toggleDropdown }) {
                     }))
                   }
                 />
+             {errors.username && <small><span className="error text-danger">{errors.username}</span></small> }
               </div>
               {/*Address field*/}
               <div className="">
@@ -153,6 +190,7 @@ function Profile({ toggleDropdown }) {
                     }))
                   }
                 />
+                {errors.phone && <small><span className="error text-danger">{errors.phone}</span></small> }
               </div>
               {/*Action buttons */}
               <div className="d-flex justify-content-between mt-2">
@@ -169,11 +207,12 @@ function Profile({ toggleDropdown }) {
                   Cancel
                 </button>
               </div>
+            
             </>
           ) : (
             <button
               className="btn btn-outline-primary w-100 p-0 mt-3"
-              onClick={handleEditProfile}
+              onClick={ handleEditProfile}
             >
               Edit Profile
             </button>
