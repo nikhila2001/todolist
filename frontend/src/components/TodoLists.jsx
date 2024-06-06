@@ -3,6 +3,13 @@ import React from "react";
 import { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import { Button } from "@mui/material";
+
 
 const host = "http://localhost:4000/api";
 
@@ -16,6 +23,7 @@ function TodoLists({ task, deleteTodo, index, setUserTasks }) {
   const [editingTodo, setEditingTodo] = useState(false);
   const [updatedTask, setUpdatedTask] = useState(task); // State to hold updated task data
   const [markAsDone, setMarkAsDone] = useState(task.completed || false);
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
 
   const formattedDeadline =
     new Date(task.deadline).toDateString() || "Invalid Date";
@@ -42,7 +50,8 @@ function TodoLists({ task, deleteTodo, index, setUserTasks }) {
       toast.error("Failed to update task");
     }
   };
-
+  
+  // handle input changes in the Edit form
   const handleChange = (e) => {
     const { name, value } = e.target;
     setUpdatedTask((prev) => ({
@@ -55,7 +64,8 @@ function TodoLists({ task, deleteTodo, index, setUserTasks }) {
     setEditingTodo(false);
     setUpdatedTask(task);
   };
-
+  
+  // handle mark as done function
   const handleTaskComplete = async () => {
     try {
       const updatedTask = {
@@ -76,6 +86,33 @@ function TodoLists({ task, deleteTodo, index, setUserTasks }) {
       toast.error("Failed to update task status");
     }
   };
+
+  // Open the confirmation dialog when delete is clicked
+  const handleDeleteConfirmation = (taskId) => {
+    setOpenConfirmDialog(true); 
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      // delete todo function
+      await deleteTodo(task._id);
+      setUserTasks((prevTasks) => prevTasks.filter((t) => t._id !== task._id));
+      toast.success("Todo deleted successfully");
+      setOpenConfirmDialog(false); 
+      // Close the dialog after successful deletion
+
+    } catch (error) {
+      console.error("Error deleting todo:", error.message);
+      toast.error("Failed to delete todo");
+      // close the dialog if user cancels
+      setOpenConfirmDialog(false)
+    }
+  };
+
+  // handle cancel delete dailog
+  const handleCancelDelete = () => {
+    setOpenConfirmDialog(false);
+  }
 
   return (
     <>
@@ -121,6 +158,7 @@ function TodoLists({ task, deleteTodo, index, setUserTasks }) {
         <td className="">
           {editingTodo ? (
             <>
+              {/* save edits button */} 
               <button
                 className="btn text-success"
                 name="save"
@@ -130,6 +168,7 @@ function TodoLists({ task, deleteTodo, index, setUserTasks }) {
                   <i className="bi bi-check-lg"></i>
                 </h5>
               </button>
+              {/* cancel editing button */}
               <button
                 className="btn text-secondary"
                 name="cancel"
@@ -141,6 +180,7 @@ function TodoLists({ task, deleteTodo, index, setUserTasks }) {
               </button>
             </>
           ) : (
+            // edit todo button
             <button
               className="btn text-primary"
               name="edit"
@@ -151,6 +191,7 @@ function TodoLists({ task, deleteTodo, index, setUserTasks }) {
               </h5>
             </button>
           )}
+         {/* Mark as done todo */}
           <button
             className="btn text-primary"
             name="mark as done"
@@ -160,11 +201,12 @@ function TodoLists({ task, deleteTodo, index, setUserTasks }) {
               <i className="bi bi-check2-square"></i>
             </h5>
           </button>
-
+          
+          {/* delete todo */}
           <button
             className="btn text-danger"
             name="delete"
-            onClick={() => deleteTodo(task._id)}
+            onClick={() => {handleDeleteConfirmation(task._id)}}
           >
             <h5>
               <i className="bi bi-trash3"></i>
@@ -172,6 +214,27 @@ function TodoLists({ task, deleteTodo, index, setUserTasks }) {
           </button>
         </td>
       </tr>
+      {/* Dailog box for confirming delete todo item */}
+      <Dialog
+      open={openConfirmDialog}
+      onClose={handleCancelDelete}
+      aria-labelledby="alert-dialog-title"
+      aria-describedby="alert-dailog-description"
+      >
+        <DialogTitle id="alert-dailog-title">
+        Confirm Delete
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+           Are you sure you want to delete this todo item ?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelDelete}>Cancel</Button>
+          <Button variant="contained" color="error" onClick={handleConfirmDelete}>Yes</Button>
+        </DialogActions>
+
+      </Dialog>
     </>
   );
 }

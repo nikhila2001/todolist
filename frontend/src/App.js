@@ -13,8 +13,6 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 
-
-
 // headers
 const host = "http://localhost:4000/api";
 const config = {
